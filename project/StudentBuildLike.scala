@@ -1,16 +1,16 @@
-import java.io.{File, FileInputStream, IOException}
-
-import sbt.Keys._
 import sbt._
-import _root_.Settings._
+import Keys._
+import Settings._
+
+import java.io.{File, IOException, FileInputStream}
 import org.apache.commons.codec.binary.Base64
 
 import scala.util.parsing.json.JSON
-import scala.util.{Failure, Success, Try}
 import scalaj.http._
 
-case class MapMapString(val map: Map[String, Map[String, String]])
+import scala.util.{Try, Success, Failure}
 
+case class MapMapString (val map: Map[String, Map[String, String]])
 /**
   * Note: keep this class concrete (i.e., do not convert it to abstract class or trait).
   */
@@ -86,8 +86,7 @@ class StudentBuildLike protected() extends CommonBuild {
   val submitLocal = inputKey[Unit]("submit local to a given file path")
   lazy val submitLocalSetting = submitLocal := {
     val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
-    val s: TaskStreams = streams.value
-    // for logging
+    val s: TaskStreams = streams.value // for logging
     val jar = (packageSubmission in Compile).value
 
     val base64Jar = prepareJar(jar, s)
@@ -108,8 +107,7 @@ class StudentBuildLike protected() extends CommonBuild {
   val submit = inputKey[Unit]("submit")
   lazy val submitSetting = submit := {
     val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
-    val s: TaskStreams = streams.value
-    // for logging
+    val s: TaskStreams = streams.value // for logging
     val jar = (packageSubmission in Compile).value
 
     val assignmentName = assignment.value
@@ -156,9 +154,9 @@ class StudentBuildLike protected() extends CommonBuild {
       )
       s.log.info("Connecting to Coursera...")
       val response = Try(http.postData(data)
-        .headers(hs)
-        .option(HttpOptions.connTimeout(10000)) // scalaj default timeout is only 100ms, changing that to 10s
-        .asString) // kick off HTTP POST
+                         .headers(hs)
+                         .option(HttpOptions.connTimeout(10000)) // scalaj default timeout is only 100ms, changing that to 10s
+                         .asString) // kick off HTTP POST
       response
     }
 

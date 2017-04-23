@@ -1,12 +1,10 @@
-import java.util.concurrent._
-
-import sbt.Keys._
 import sbt._
-
-import scala.collection.mutable.ListBuffer
+import Keys._
+import sys.process.{Process => SysProc, ProcessLogger}
+import java.util.concurrent._
+import collection.mutable.ListBuffer
 import scala.pickling.Defaults._
 import scala.pickling.json._
-import scala.sys.process.{ProcessLogger, Process => SysProc}
 
 final case class GradingSummary(score: Int, maxScore: Int, feedback: String)
 
@@ -115,11 +113,10 @@ object ScalaTestRunner {
         logError(msg)
         summaryProc.destroy()
         throw e
-    }
-    /* finally { // Useful for debugging when Coursera kills our grader
-         println(scala.io.Source.fromFile(outFilePath).getLines().mkString("\n"))
-         println(scala.io.Source.fromFile(summaryFilePath).getLines().mkString("\n"))
-       }*/
+    } /* finally { // Useful for debugging when Coursera kills our grader
+      println(scala.io.Source.fromFile(outFilePath).getLines().mkString("\n"))
+      println(scala.io.Source.fromFile(summaryFilePath).getLines().mkString("\n"))
+    }*/
     // Example output:
     // {
     //   "$type": "ch.epfl.lamp.grading.Entry.SuiteStart",
@@ -201,7 +198,7 @@ object ScalaTestRunner {
     val timeoutPerTest = options.get("individualTimeout").map(_.toInt).getOrElse(Settings.individualTestTimeout)
 
     "======== TESTING ENVIRONMENT ========\n" +
-      s"Limits: memory: $memory,  total time: ${timeout}s,  per test case time: ${timeoutPerTest}s\n"
+    s"Limits: memory: $memory,  total time: ${timeout}s,  per test case time: ${timeoutPerTest}s\n"
   }
 
   def scalaTestGrade(gradingReporter: GradingFeedback, classpath: Classpath, testClasses: File, outfile: File,
