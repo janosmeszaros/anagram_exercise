@@ -35,8 +35,9 @@ object Anagrams {
     * Note: you must use `groupBy` to implement this method!
     */
   def wordOccurrences(w: Word): Occurrences = {
-    var charList = w.toLowerCase.toList
-    charList.groupBy((c: Char) => c)
+    w.toLowerCase
+      .toList
+      .groupBy((c: Char) => c)
       .mapValues(c => c.length)
       .toList
       .sorted
@@ -163,11 +164,14 @@ object Anagrams {
     */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
     sentence match {
-      case List() => List()
+      case List() => List(List())
       case _ => {
         val comb = combinations(sentenceOccurrences(sentence))
-        for (c <- comb) yield
+        for (occ <- comb) yield dictionaryByOccurrences.getOrElse(occ, List())
       }
     }
   }
+
+
+
 }
